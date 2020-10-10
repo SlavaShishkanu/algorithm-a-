@@ -44,16 +44,6 @@ public class EndpointDrawer2 extends Drawer {
             points.add(new Point(point.getX() + 1, point.getY()));
             return points;
         }
-        
-        if (strictEndpoints) {
-            return points;
-        }
-
-        if (fieldHolder.isInBoudsAndAccessible(point.getX() - 1, point.getY())) {
-            points.add(new Point(point.getX() - 1, point.getY()));
-            return points;
-        }
-        points.clear();
         return points;
     }
 
@@ -61,22 +51,7 @@ public class EndpointDrawer2 extends Drawer {
         final List<Point> expandedDown = expandedRight.stream()
                 .map(point -> new Point(point.getX(), point.getY() + 1))
                 .collect(Collectors.toList());
-        if (expandedDown.stream().allMatch(fieldHolder::isInBoundsAndAccessible)) {
             return expandedDown;
-        }
-        
-        if (strictEndpoints) {
-            return expandedDown;
-        }
-
-        final List<Point> expandedUp = expandedRight.stream()
-                .map(point -> new Point(point.getX(), point.getY() - 1))
-                .collect(Collectors.toList());
-        if (expandedUp.stream().allMatch(fieldHolder::isInBoundsAndAccessible)) {
-            return expandedUp;
-        }
-        return new ArrayList<>();
     }
-
 
 }

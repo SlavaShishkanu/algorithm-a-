@@ -165,19 +165,8 @@ public class AlgorithmApplicatonUI extends Application {
             redrawImage();
         });
         
-        final CheckBox strictEndpointsCheckbox = new CheckBox("strict endpoints");
-        strictEndpointsCheckbox.setSelected(context.isStrictEndpoints());
-        strictEndpointsCheckbox.setOnAction(event -> {
-            if (strictEndpointsCheckbox.isSelected()) {
-                context.setStrictEndpoints(true);
-            } else {
-                context.setStrictEndpoints(false);
-            }
-            fieldManager.updateField();
-        });
-
         rightPanel.getChildren().addAll(buttonSetStart, buttonSetGoal, buttonSetWalls, buttonRemoveWall,
-                buttonClearWalls, boldPathcheckbox, allowDiagonalMovementCheckbox, strictEndpointsCheckbox);
+                buttonClearWalls, boldPathcheckbox, allowDiagonalMovementCheckbox);
     }
 
     private void handleImageClick(final double x, final double y, MouseButton button, final UIContext uiContext2) {

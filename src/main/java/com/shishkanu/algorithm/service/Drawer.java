@@ -12,13 +12,6 @@ import com.shishkanu.algorithm.domain.FieldInterface;
  */
 public abstract class Drawer {
     
-    protected boolean strictEndpoints;
-    
     abstract void draw(FieldInterface field);
-    
-    public void setStrictEndpoints(boolean strictEndpoints) {
-        this.strictEndpoints = strictEndpoints;
-    }
-
 
 }

@@ -2,18 +2,16 @@ package com.shishkanu.algorithm.config;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.shishkanu.algorithm.search.AStarSearchAlgorithm;
 import com.shishkanu.algorithm.search.Field;
 import com.shishkanu.algorithm.search.GraphExtractor;
 import com.shishkanu.algorithm.search.GraphExtractorForSizeOne;
 import com.shishkanu.algorithm.search.GraphExtractorForSizeThree;
 import com.shishkanu.algorithm.search.GraphExtractorForSizeTwoImpl;
-import com.shishkanu.algorithm.service.Drawer;
-import com.shishkanu.algorithm.service.EndpointDrawer1;
-import com.shishkanu.algorithm.service.EndpointDrawer2;
-import com.shishkanu.algorithm.service.EndpointDrawer3;
 import com.shishkanu.algorithm.service.FieldManager;
 import com.shishkanu.algorithm.service.PathFiller;
 
@@ -41,15 +39,11 @@ public final class Context {
 
     private boolean diagonalMovementAllowed = false;
     
-    private boolean strictEndpoints = true;
-
     private PathFiller pathComputator;
 
     private FieldManager fieldHolder;
 
     private Map<Integer, GraphExtractor> graphExtractors;
-
-    private HashMap<Integer, Drawer> drawers;
 
     private Context() { }
 
@@ -60,11 +54,6 @@ public final class Context {
     public void init() {
         log.debug("Initializing context");
 
-        drawers = new HashMap<>();
-        drawers.put(1, new EndpointDrawer1());
-        drawers.put(2, new EndpointDrawer2());
-        drawers.put(3, new EndpointDrawer3());
-
         graphExtractors = new HashMap<>();
         graphExtractors.put(1, new GraphExtractorForSizeOne());
         graphExtractors.put(2, new GraphExtractorForSizeTwoImpl());
@@ -74,11 +63,9 @@ public final class Context {
         pathComputator = new PathFiller(graphExtractors, new AStarSearchAlgorithm());
         pathComputator.setBoldPath(boldPath);
 
-        fieldHolder = new FieldManager(drawers, pathComputator, MAX_OBJECT_SIZE,
+        fieldHolder = new FieldManager(pathComputator, MAX_OBJECT_SIZE,
                 objectSize,
                 new Field(FIELD_WIDTH, FIELD_HEIGHT));
-        
-        setStrictEndpoints(strictEndpoints);
         
     }
 
@@ -91,15 +78,6 @@ public final class Context {
         graphExtractors.forEach((i, graphExtractor) -> graphExtractor.setDiagonalMovementAllowed(diagonalMovementAllowed));
     }
     
-    public boolean isStrictEndpoints() {
-        return strictEndpoints;
-    }
-
-    public void setStrictEndpoints(boolean strictEndpoints) {
-        drawers.forEach((i, drawer) -> drawer.setStrictEndpoints(strictEndpoints));
-        this.strictEndpoints = strictEndpoints;
-    }
-
     public boolean isBoldPath() {
         return boldPath;
     }

@@ -2,12 +2,12 @@ package com.shishkanu.algorithm.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.shishkanu.algorithm.domain.FieldDto;
 import com.shishkanu.algorithm.domain.FieldInterface;
 import com.shishkanu.algorithm.domain.Point;
@@ -34,13 +34,12 @@ public class FieldManager {
 
     private FieldInterface field;
 
-    private Map<Integer, Drawer> drawers;
+    private Drawer endpointDrawer = new EndpointDrawerMain();
 
     private PathFiller pathComputator;
 
-    public FieldManager(final Map<Integer, Drawer> drawers, final PathFiller pathComputator,
+    public FieldManager(final PathFiller pathComputator,
             final int maxSquareSize, final int initialSquareSize, final FieldInterface field) {
-        this.drawers = drawers;
         this.pathComputator = pathComputator;
         this.maxObjectSize = maxSquareSize;
         this.field = field;
@@ -50,17 +49,11 @@ public class FieldManager {
     public void updateField() {
         log.debug("square size ={}", getObjectSize());
         
-        final Drawer endpointsDrawer = drawers.get(getObjectSize());
-        endpointsDrawer.draw(field);
+        endpointDrawer.draw(field);
 
         log.debug(FIELD_IS, field);
         
-        if (field.getStartObjectPoints().stream().anyMatch(point -> field.getWalls().contains(point))) {
-            field.clearStart();
-        }
-        if (field.getGoalObjectPoints().stream().anyMatch(point -> field.getWalls().contains(point))) {
-            field.clearGoal();
-        }    
+        updateEndpoints();
         
         if (field.getStartObjectPoints().isEmpty() || field.getGoalObjectPoints().isEmpty()) {
             clearPath();
@@ -70,12 +63,20 @@ public class FieldManager {
         pathComputator.fillPath(field);
     }
 
+    private void updateEndpoints() {
+	if (field.getStartObjectPoints().stream().anyMatch(point -> field.getWalls().contains(point))) {
+            field.clearStart();
+        }
+        if (field.getGoalObjectPoints().stream().anyMatch(point -> field.getWalls().contains(point))) {
+            field.clearGoal();
+        }
+    }
+
     public void setStart(final Point start) {
         if (field.isInBoundsAndAccessible(start)) {
             field.setStart(start);
         } else {
             log.debug(POINT_IS_NOT_ACCESSIBLE, start);
-            return;
         }
     }
 
@@ -84,7 +85,6 @@ public class FieldManager {
             field.setGoal(goal);
         } else {
             log.debug(POINT_IS_NOT_ACCESSIBLE, goal);
-            return;
         }
     }
 

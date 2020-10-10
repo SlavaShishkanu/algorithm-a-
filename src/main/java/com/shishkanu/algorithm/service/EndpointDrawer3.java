@@ -40,27 +40,7 @@ public class EndpointDrawer3 extends Drawer {
             return objectPoints;
         }
         
-        if (strictEndpoints) {
             return objectPoints;
-        }
-        
-//TODO refactor
-        for (final Point point2 : pointsExpanded) {
-            log.debug(POINT, point2);
-            final List<Point> pointsExpanded1 = expandPoint(point2);
-            log.debug(EXPANDED_POINTS, pointsExpanded1);
-            final long pointsNotInBounds1 = pointsExpanded1.stream()
-                    .filter(point3 -> !fieldHolder.isInBoundsAndAccessible(point3))
-                    .count();
-            log.debug(NOT_IN_BOUND, pointsNotInBounds1);
-            if (pointsNotInBounds1 == 0) {
-                objectPoints.addAll(pointsExpanded1);
-                return objectPoints;
-            }
-        }
-
-        log.debug("expanded square ={}", pointsExpanded);
-        return objectPoints;
     }
 
     private List<Point> expandPoint(final Point point) {
